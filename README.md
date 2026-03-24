@@ -1,90 +1,123 @@
-# Subscription Manager
+# 🎓 Subscription Manager 🔐
 
 A decentralized subscription system that tracks user access based on time using a Stellar Soroban smart contract. The project includes a sleek, premium frontend web application with demo mode support.
 
-## Project Structure
+## Deployment Details
 
-- `contracts/subscription/` - The Rust smart contract code (`src/lib.rs`) and tests (`src/test.rs`).
-- `frontend/` - A sleek, modern HTML/CSS/JS web application to interact with the subscription system.
+*   **Contract ID / Address:** `CCRD6PDVBWGHGLB7LKJNNES33U6O4X56JR2VJYDDAIZO764GS7DFORWI`
+*   **Network:** Stellar Testnet
+*   **Deployment Link:** `[Insert Deployment URL Here]`
 
-## Smart Contract Setup
+## Dashboard Preview
 
-Make sure you have Rust and the `wasm32-unknown-unknown` target installed, as well as the Soroban CLI.
+![Dashboard Screenshot](./image.png)
 
-```bash
-rustup target add wasm32-unknown-unknown
-cargo install --locked soroban-cli
-```
+---
 
-## CLI Commands
+## Stellar Labs
 
-### 1. Build Contract
-Compiles the smart contract into a `.wasm` file.
+![Stellar Labs Screenshot](./sellar-labs.png)
 
-```bash
-cargo build --target wasm32-unknown-unknown --release
-```
+---
 
-### 2. Deploy Contract
-Deploys the compiled `.wasm` file to the Stellar Testnet. You must create an identity (e.g., `alice`) first if you haven't.
+## Features ✨
 
-```bash
-soroban contract deploy \
-  --wasm target/wasm32-unknown-unknown/release/subscription.wasm \
-  --source alice \
-  --network testnet
-```
+*   **Time-Based Access Control:** Users can subscribe for a specific duration, and the smart contract tracks their access seamlessly on the ledger.
+*   **Instant Verification:** Anyone can query a user's subscription status — the contract returns `true` if active, `false` otherwise.
+*   **Non-Custodial Wallet Integration:** Securely connect and sign transactions using the [Freighter Browser Extension](https://www.freighter.app/).
+*   **Demo Mode:** Supports localStorage-based demo mode for testing without a live wallet.
+*   **Tamper-Proof Timestamps:** Subscriptions are securely tied to the Soroban ledger's precise block timestamps.
 
-*Note: The deployment command will output your Contract ID (e.g., `C...`). Substitute `<CONTRACT_ID>` below.*
+## Project Architecture 🏗️
 
-### 3. Invoke `subscribe`
-Extends or initiates a subscription for a given duration (e.g., 3600 seconds = 1 hour).
+The project is divided into two main components:
 
-```bash
-soroban contract invoke \
-  --id <CONTRACT_ID> \
-  --source alice \
-  --network testnet \
-  -- \
-  subscribe \
-  --user alice \
-  --duration 3600
-```
+1.  **Smart Contract (`/contracts/subscription`)**: Written in Rust using the Soroban SDK. It handles subscriptions, access validation, and expiration tracking.
+2.  **Frontend (`/frontend`)**: A Web3 frontend (`index.html` + `app.js`) that interacts with the deployed contract on the Soroban Testnet via Freighter wallet.
 
-### 4. Invoke `is_active`
-Checks whether the subscription is currently active (true or false).
+---
 
-```bash
-soroban contract invoke \
-  --id <CONTRACT_ID> \
-  --source bob \
-  --network testnet \
-  -- \
-  is_active \
-  --user alice
-```
+## Getting Started 🚀
 
-### 5. Invoke `get_expiry`
-Fetches the precise UNIX timestamp of when the subscription expires.
+### Prerequisites
 
-```bash
-soroban contract invoke \
-  --id <CONTRACT_ID> \
-  --source bob \
-  --network testnet \
-  -- \
-  get_expiry \
-  --user alice
-```
+*   [Node.js](https://nodejs.org/) (v18+)
+*   [Rust](https://www.rust-lang.org/) (v1.70+)
+*   [Stellar CLI](https://developers.stellar.org/docs/build/smart-contracts/getting-started/setup)
+*   [Freighter Wallet Extension](https://www.freighter.app/)
 
-## Running the Frontend
+### 1. Smart Contract (Phase A)
 
-To view the stunning frontend in demo mode simply open:
-```bash
-./frontend/index.html
-```
+The contract is already deployed to the Stellar Testnet at the address above. To deploy it yourself:
 
-Or serve it locally using Python to prevent CORS issues if modifying further:
-```bash
-python -m http.server -d frontend
-```
+1. Build the contract:
+   ```bash
+   stellar contract build
+   ```
+   Or manually:
+   ```bash
+   cargo build --target wasm32-unknown-unknown --release
+   ```
+   Output: `target/wasm32-unknown-unknown/release/subscription.wasm`
+
+2. Run unit tests:
+   ```bash
+   cargo test
+   ```
+
+3. Deploy to Testnet:
+   ```bash
+   stellar contract deploy \
+     --wasm target/wasm32-unknown-unknown/release/subscription.wasm \
+     --source <YOUR_SECRET_KEY> \
+     --network testnet
+   ```
+
+4. Invoke `subscribe`:
+   ```bash
+   stellar contract invoke \
+     --id CCRD6PDVBWGHGLB7LKJNNES33U6O4X56JR2VJYDDAIZO764GS7DFORWI \
+     --source <YOUR_SECRET_KEY> \
+     --network testnet \
+     -- subscribe --user <YOUR_PUBLIC_KEY> --duration 3600
+   ```
+   
+5. Check if subscription `is_active`:
+   ```bash
+   stellar contract invoke \
+     --id CCRD6PDVBWGHGLB7LKJNNES33U6O4X56JR2VJYDDAIZO764GS7DFORWI \
+     --network testnet \
+     -- is_active --user <YOUR_PUBLIC_KEY>
+   ```
+
+6. Fetch precise `get_expiry` UNIX timestamp:
+   ```bash
+   stellar contract invoke \
+     --id CCRD6PDVBWGHGLB7LKJNNES33U6O4X56JR2VJYDDAIZO764GS7DFORWI \
+     --network testnet \
+     -- get_expiry --user <YOUR_PUBLIC_KEY>
+   ```
+
+### 2. Frontend Application (Phase B)
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Open `index.html` in a browser directly, or serve it locally.
+3. Supports **Demo Mode** (localStorage) and **Freighter wallet** for live testnet interaction.
+
+### Connecting your Wallet
+
+1. Install the Freighter extension.
+2. Switch the Freighter network to **Testnet**.
+3. Fund your Freighter wallet using the [Stellar Laboratory Friendbot](https://laboratory.stellar.org/#account-creator?network=test).
+4. Click **CONNECT FREIGHTER** in the top right corner of the dApp.
+
+## Contract API 📋
+
+| Function | Who Can Call | Description |
+|---|---|---|
+| `subscribe(user, duration)` | Anyone | Subscribes the specified user for `duration` seconds |
+| `is_active(user)` | Anyone | Returns `true` if the user's subscription is currently active |
+| `get_expiry(user)` | Anyone | Returns the precise UNIX timestamp of expiration |
