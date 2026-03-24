@@ -10,13 +10,13 @@ A decentralized subscription system that tracks user access based on time using 
 
 ## Dashboard Preview
 
-![Dashboard Screenshot](./image.png)
+![Dashboard Screenshot](./dashboard.png)
 
 ---
 
 ## Stellar Labs
 
-![Stellar Labs Screenshot](./sellar-labs.png)
+![Stellar Labs Screenshot](./stellar-labs.png)
 
 ---
 
