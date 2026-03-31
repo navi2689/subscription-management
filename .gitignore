@@ -4,3 +4,16 @@ target
 # Local settings
 .soroban
 .stellar
+
+# Next.js
+frontend/.next
+frontend/node_modules
+frontend/out
+
+# Dependencies
+node_modules
+
+# Misc
+.DS_Store
+*.pem
+.env*.local
